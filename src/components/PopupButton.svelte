@@ -117,9 +117,9 @@
       }
 
       .removeBasicThings {
-        background-color: transparent;
-        border: none;
-        user-select: text;
+        // background-color: transparent;
+        // border: none;
+        // user-select: text;
       }
     }
 

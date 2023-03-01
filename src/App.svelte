@@ -11,7 +11,7 @@
     popupWidth="50%"
     popupHeight="50%"
   >
-    <h1>hello guys</h1>
+    hello guys
   </PopupButton>
 </main>
 

@@ -49,7 +49,9 @@
   } else {
     s(root).setProperty("--scrollability", "visible");
     setTimeout(() => {
-      hide = true;
+      if (!hide) {
+        hide = true;
+      }
     }, 500);
   }
 
@@ -59,14 +61,28 @@
   } else {
     s(root).setProperty("--td", ".5s");
   }
+
+  $: console.log("click:",clicked,"hide:", hide);
 </script>
 
 <main>
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div id="background" class:showBackground={clicked} class:hideBackground1={!clicked} class:hideBackground2={hide} on:click={() => clicked = false}></div>
+  <div
+    id="background"
+    class:showBackground={clicked}
+    class:hideBackground1={!clicked}
+    class:hideBackground2={hide}
+    on:click={() => clicked = false}
+  ></div>
 
   <span id="container" bind:this={container}>
-    <button id="popupButton" bind:this={popupButton} on:click={() => clicked = true} class:goCenter={clicked} class:removeBasicThings={clicked}>
+    <button
+      id="popupButton"
+      bind:this={popupButton}
+      on:click={() => clicked = true}
+      class:goCenter={clicked}
+      class:removeBasicThings={clicked}
+    >
       {#if clicked}
         <slot />
       {:else}

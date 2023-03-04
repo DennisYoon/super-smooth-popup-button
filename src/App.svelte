@@ -5,13 +5,13 @@
 <main>
   <h1>a Journey to the Journal</h1>
   <PopupButton
-    content="hello world"
     originalWidth="100px"
     originalHeight="50px"
     popupWidth="50%"
     popupHeight="50%"
   >
-    hello guys
+    <div slot="before">hello world</div>
+    <div slot="after">hello guys</div>
   </PopupButton>
 </main>
 

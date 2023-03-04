@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
 
   // props
-  export let content: string;
   export let originalWidth: string;
   export let originalHeight: string;
   export let popupWidth: string;
@@ -83,8 +82,15 @@
       class:goCenter={clicked}
       class:removeBasicThings={clicked}
     >
-      <slot />
-      {content}
+      {#if clicked}
+        <div id="slotA">
+          <slot name="after"></slot>
+        </div>
+      {:else}
+        <div id="slotB">
+          <slot name="before"></slot>
+        </div>
+      {/if}
     </button>
   </span>
 </main>
@@ -111,6 +117,8 @@
 
       button {
         margin: 0;
+        padding: 0;
+
         position: absolute;
         top: var(--top);
         left: var(--left);
@@ -129,10 +137,8 @@
         transform: translate(-50%, -50%);
       }
 
-      .removeBasicThings {
-        // background-color: transparent;
-        // border: none;
-        // user-select: text;
+      #slotA, #slotB {
+        height: 100%;
       }
     }
 

@@ -83,11 +83,8 @@
       class:goCenter={clicked}
       class:removeBasicThings={clicked}
     >
-      {#if clicked}
-        <slot />
-      {:else}
-        {content}
-      {/if}
+      <slot />
+      {content}
     </button>
   </span>
 </main>
@@ -145,16 +142,20 @@
       left: 0;
       width: 100%;
       height: 100%;
-      transition: background-color .5s;
+      transition-property: background-color, backdrop-filter;
+      transition-duration: .5s;
     };
 
     .showBackground {
       visibility: visible !important;
+      backdrop-filter: blur(10px);
       background-color: rgba(0, 0, 0, 0.551) !important;
     }
 
     .hideBackground1 {
       background-color: rgba(255, 255, 255, 0);
+      backdrop-filter: blur(0px);
+
     }
 
     .hideBackground2 {

@@ -7,6 +7,8 @@
   export let popupWidth: string;
   export let popupHeight: string;
 
+  export let className: string = "";
+
   // bind:this DOM
   let container: HTMLElement;
   let popupButton: HTMLElement;
@@ -76,21 +78,20 @@
 
   <span id="container" bind:this={container}>
     <button
+      class={className}
       id="popupButton"
       bind:this={popupButton}
       on:click={() => clicked = true}
       class:goCenter={clicked}
       class:removeBasicThings={clicked}
     >
-      {#if clicked}
-        <div id="slotA">
+        <div id="after" class:hideElement={!clicked}>
           <slot name="after"></slot>
         </div>
-      {:else}
-        <div id="slotB">
+
+        <div id="before" class:hideElement={clicked}>
           <slot name="before"></slot>
         </div>
-      {/if}
     </button>
   </span>
 </main>
@@ -115,7 +116,7 @@
     #container {
       display: inline-block;
 
-      button {
+      #popupButton {
         margin: 0;
         padding: 0;
 
@@ -126,19 +127,35 @@
 
         transition-property: top, left, transform, width, height;
         transition-duration: var(--td);
-      }
 
-      .goCenter {
-        position: fixed;
-        width: var(--width) !important;
-        height: var(--height) !important;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+        &.goCenter {
+          position: fixed;
+          width: var(--width) !important;
+          height: var(--height) !important;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
 
-      #slotA, #slotB {
-        height: 100%;
+          border: none;
+          text-transform: none;
+          background-color: white;
+        }
+
+        #after, #before {
+          position: absolute;
+          height: 100%;
+          transition: opacity .5s;
+          top: 0;
+          left: 0;
+
+          &.hideElement {
+            opacity: 0;
+          }
+        }
+
+        #after {
+          width: var(--width);
+        }
       }
     }
 
@@ -150,22 +167,22 @@
       height: 100%;
       transition-property: background-color, backdrop-filter;
       transition-duration: .5s;
-    };
 
-    .showBackground {
-      visibility: visible !important;
-      backdrop-filter: blur(10px);
-      background-color: rgba(0, 0, 0, 0.551) !important;
-    }
+      &.showBackground {
+        visibility: visible !important;
+        backdrop-filter: blur(10px);
+        background-color: rgba(0, 0, 0, 0.551) !important;
+      }
 
-    .hideBackground1 {
-      background-color: rgba(255, 255, 255, 0);
-      backdrop-filter: blur(0px);
+      &.hideBackground1 {
+        background-color: rgba(255, 255, 255, 0);
+        backdrop-filter: blur(0px);
 
-    }
+      }
 
-    .hideBackground2 {
-      visibility: hidden !important;
+      &.hideBackground2 {
+        visibility: hidden !important;
+      }
     }
   }
 </style>

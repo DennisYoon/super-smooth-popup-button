@@ -10,11 +10,11 @@
   export let className: string = "";
 
   // bind:this DOM
+  let root: HTMLElement;
   let container: HTMLElement;
   let popupButton: HTMLElement;
 
   // variables
-  const root = document.documentElement;
   let clicked = false;
   let hide = true;
 
@@ -41,47 +41,42 @@
   onMount(designateButtonPosition);
 
   // resize 시...
-  window.addEventListener("resize", designateButtonPosition)
-
-  // 'clicked'시
-  $: if (clicked) {
-    s(root).setProperty("--scrollability", "hidden");
-    hide = false;
-  } else {
-    s(root).setProperty("--scrollability", "visible");
-    setTimeout(() => {
-      if (!hide) {
-        hide = true;
-      }
-    }, 500);
-  }
-
-  // 'hide'시
-  $: if (hide) {
-    s(root).setProperty("--td", ".0s");
-  } else {
-    s(root).setProperty("--td", ".5s");
-  }
-
-  $: console.log("click:",clicked,"hide:", hide);
+  window.addEventListener("resize", designateButtonPosition);
 </script>
 
-<main>
+<main bind:this={root}>
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div
     id="background"
     class:showBackground={clicked}
     class:hideBackground1={!clicked}
     class:hideBackground2={hide}
-    on:click={() => clicked = false}
+    on:click={() => {
+      clicked = false;
+      s(root).setProperty("--zi", "1");
+      s(root).setProperty("--scrollability", "visible");
+      setTimeout(() => {
+        if (!hide) {
+          hide = true;
+          s(root).setProperty("--td", ".0s");
+        }
+      }, 500);
+    }}
   ></div>
 
   <span id="container" bind:this={container}>
-    <button
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div
       class={className}
       id="popupButton"
       bind:this={popupButton}
-      on:click={() => clicked = true}
+      on:click={() => {
+        clicked = true;
+        s(root).setProperty("--zi", "99999");
+        s(root).setProperty("--scrollability", "hidden");
+        hide = false;
+        s(root).setProperty("--td", ".5s");
+      }}
       class:goCenter={clicked}
       class:removeBasicThings={clicked}
     >
@@ -92,27 +87,26 @@
         <div id="before" class:hideElement={clicked}>
           <slot name="before"></slot>
         </div>
-    </button>
+    </div>
   </span>
 </main>
 
 <style lang="scss">
-  :root {
+  :global(body) {
+    overflow: var(--scrollability);
+  }
+
+  main {
     --top: auto;
     --left: auto;
 
     --width: auto;
     --height: auto;
 
-    --td: .5s;
+    --td: .0s;
     --scrollability: scroll;
-  }
 
-  :global(body) {
-    overflow: var(--scrollability);
-  }
-
-  main {
+    --zi: 1;
     #container {
       display: inline-block;
 
@@ -128,6 +122,9 @@
         transition-property: top, left, transform, width, height;
         transition-duration: var(--td);
 
+        background-color: rgb(244, 244, 244);
+        border: 1px solid rgb(204, 204, 204);
+
         &.goCenter {
           position: fixed;
           width: var(--width) !important;
@@ -135,15 +132,12 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-
-          border: none;
-          text-transform: none;
-          background-color: white;
         }
 
         #after, #before {
           position: absolute;
           height: 100%;
+          width: 100%;
           transition: opacity .5s;
           top: 0;
           left: 0;
@@ -153,8 +147,17 @@
           }
         }
 
+        #before {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          user-select: none;
+          cursor: pointer;
+        }
+
         #after {
           width: var(--width);
+          z-index: var(--zi);
         }
       }
     }

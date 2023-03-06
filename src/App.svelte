@@ -4,17 +4,16 @@
 
 <main>
   <h1>a Journey to the Journal</h1>
-  <PopupButton
-    originalWidth="300px"
-    originalHeight="100px"
-    popupWidth="200px"
+  {#each [1] as i}
+    <PopupButton
+    originalWidth="100px"
+    originalHeight="50px"
+    popupWidth="400px"
     popupHeight="500px"
     className="hello"
   >
     <div slot="before">
-      <h2>
-        hello world
-      </h2>
+      hello world
     </div>
     <div slot="after">
       <h2>
@@ -23,6 +22,8 @@
       <button>hello world</button>
     </div>
   </PopupButton>
+  {/each}
+  
 </main>
 
 <style lang="scss">
@@ -38,9 +39,5 @@
 
   h1 {
     text-align: center;
-  }
-
-  :global(.hello) {
-    // background-color: red;
   }
 </style>

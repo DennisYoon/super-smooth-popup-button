@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import Background from "./Background.svelte";
+  import { showingHiding, called as calledOrigin } from "./connecter";
 
   // props
   export let originalWidth: string;
@@ -9,19 +11,30 @@
 
   export let className: string = "";
 
+  // functions
+  function s(element: HTMLElement) {
+    return element.style;
+  }
+
+  // showingHiding
+  let showing: boolean;
+  let hiding: boolean;
+
+  showingHiding.subscribe(v => {
+    showing = v.showing;
+    hiding = v.hiding;
+  });
+
   // bind:this DOM
+  const body = document.querySelector("body");
   let root: HTMLElement;
   let container: HTMLElement;
   let popupButton: HTMLElement;
 
   // variables
+  let backgroundMe = false;
   let clicked = false;
-  let hide = true;
-
-  // functions
-  function s(element: HTMLElement) {
-    return element.style;
-  }
+  let hideBefore = false;
 
   function designateButtonPosition() {
     s(container).width = s(popupButton).width = originalWidth;
@@ -37,33 +50,45 @@
     s(root).setProperty("--height", popupHeight);
   }
 
+  // DOM 렌더링 전
+  calledOrigin.update(v => {
+    backgroundMe = !v;
+    return true;
+  });
+
   // DOM 렌더링 후
-  onMount(designateButtonPosition);
+  onMount(() => {
+    designateButtonPosition();    
+  });
 
   // resize 시...
   window.addEventListener("resize", designateButtonPosition);
+
+  $: if (showing) {
+    s(root).setProperty("--myzi", clicked ? "99999" : "-1");
+  } else {
+    if (root) {
+      setTimeout(() => {
+        if (hiding) s(root).setProperty("--myzi", "99999");
+      }, 500);
+      clicked = showing;
+    }
+  };
+
+  $: if (clicked) {
+    setTimeout(() => {
+      hideBefore = true;
+    }, 500);
+  } else {
+    hideBefore = false;
+  }
 </script>
 
 <main bind:this={root}>
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div
-    id="background"
-    class:showBackground={clicked}
-    class:hideBackground1={!clicked}
-    class:hideBackground2={hide}
-    on:click={() => {
-      clicked = false;
-      s(root).setProperty("--zi", "1");
-      s(root).setProperty("--scrollability", "visible");
-      setTimeout(() => {
-        if (!hide) {
-          hide = true;
-          s(root).setProperty("--td", ".0s");
-        }
-      }, 500);
-    }}
-  ></div>
-
+  {#if backgroundMe}
+    
+  <Background></Background>
+  {/if}
   <span id="container" bind:this={container}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
@@ -72,19 +97,19 @@
       bind:this={popupButton}
       on:click={() => {
         clicked = true;
-        s(root).setProperty("--zi", "99999");
-        s(root).setProperty("--scrollability", "hidden");
-        hide = false;
-        s(root).setProperty("--td", ".5s");
+        showingHiding.set({showing: true, hiding: false});
+        s(root).setProperty("--myzi", "99999");
+        body.style.setProperty("--scrollability", "hidden");
+        body.style.setProperty("--td", ".5s");
       }}
       class:goCenter={clicked}
       class:removeBasicThings={clicked}
     >
-        <div id="after" class:hideElement={!clicked}>
+        <div id="after" class:hideElement1={!clicked}>
           <slot name="after"></slot>
         </div>
 
-        <div id="before" class:hideElement={clicked}>
+        <div id="before" class:hideElement1={clicked} class:hideElement2={hideBefore}>
           <slot name="before"></slot>
         </div>
     </div>
@@ -94,6 +119,9 @@
 <style lang="scss">
   :global(body) {
     overflow: var(--scrollability);
+
+    --td: .0s;
+    --scrollability: scroll;
   }
 
   main {
@@ -103,18 +131,19 @@
     --width: auto;
     --height: auto;
 
-    --td: .0s;
-    --scrollability: scroll;
+    --myzi: 1;
 
-    --zi: 1;
+
     #container {
       display: inline-block;
 
       #popupButton {
         margin: 0;
         padding: 0;
+        z-index: var(--myzi);
 
         position: absolute;
+        
         top: var(--top);
         left: var(--left);
         transform: translate(0, 0);
@@ -124,6 +153,8 @@
 
         background-color: rgb(244, 244, 244);
         border: 1px solid rgb(204, 204, 204);
+
+        overflow: hidden;
 
         &.goCenter {
           position: fixed;
@@ -142,7 +173,7 @@
           top: 0;
           left: 0;
 
-          &.hideElement {
+          &.hideElement1 {
             opacity: 0;
           }
         }
@@ -153,38 +184,15 @@
           align-items: center;
           user-select: none;
           cursor: pointer;
+
+          &.hideElement2 {
+            visibility: none;
+          }
         }
 
         #after {
           width: var(--width);
-          z-index: var(--zi);
         }
-      }
-    }
-
-    #background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      transition-property: background-color, backdrop-filter;
-      transition-duration: .5s;
-
-      &.showBackground {
-        visibility: visible !important;
-        backdrop-filter: blur(10px);
-        background-color: rgba(0, 0, 0, 0.551) !important;
-      }
-
-      &.hideBackground1 {
-        background-color: rgba(255, 255, 255, 0);
-        backdrop-filter: blur(0px);
-
-      }
-
-      &.hideBackground2 {
-        visibility: hidden !important;
       }
     }
   }

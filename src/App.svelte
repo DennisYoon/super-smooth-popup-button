@@ -1,27 +1,30 @@
 <script lang="ts">
-  import PopupButton from "./components/PopupButton.svelte";
+  import PopupButton from "./components/PopupButton/PopupButton.svelte";
+  import Background from "./components/PopupButton/Background.svelte";
 </script>
 
 <main>
+  <!-- <Background /> -->
   <h1>a Journey to the Journal</h1>
-  {#each [1] as i}
+
+  {#each Array(2) as i}
     <PopupButton
-    originalWidth="100px"
-    originalHeight="50px"
-    popupWidth="400px"
-    popupHeight="500px"
-    className="hello"
-  >
-    <div slot="before">
-      hello world
-    </div>
-    <div slot="after">
-      <h2>
-        DO You Hear the people sing?
-      </h2>
-      <button>hello world</button>
-    </div>
-  </PopupButton>
+      originalWidth="100px"
+      originalHeight="50px"
+      popupWidth="400px"
+      popupHeight="500px"
+      className="hello"
+    >
+      <div slot="before">
+        hello world
+      </div>
+      <div slot="after">
+        <h2>
+          DO You Hear the people sing?
+        </h2>
+        <button>hello world</button>
+      </div>
+    </PopupButton>
   {/each}
   
 </main>

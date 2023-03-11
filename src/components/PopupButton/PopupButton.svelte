@@ -33,7 +33,8 @@
 
   // variables
   let backgroundMe = false;
-  let clicked = false;
+  let clicked1 = false;
+  let clicked2 = false;
   let hideBefore = false;
 
   function designateButtonPosition() {
@@ -50,8 +51,6 @@
     
     s(popupButton).width = width + "px";
     s(popupButton).height = height + "px";
-
-    setTimeout(designateButtonPosition, 1);
   }
 
   // DOM 렌더링 전
@@ -61,28 +60,37 @@
   });
 
   // DOM 렌더링 후
-  onMount(designateButtonPosition);
+  onMount(() => {
+    designateButtonPosition();
+    setTimeout(designateButtonPosition, 1);
+  });
 
   // resize 시...
   window.addEventListener("resize", designateButtonPosition);
 
   $: if (showing) {
-    s(root).setProperty("--myzi", clicked ? "99999" : "-1");
+    s(root).setProperty("--myzi", clicked2 ? "99999" : "-1");
   } else {
     if (root) {
       setTimeout(() => {
         if (hiding) s(root).setProperty("--myzi", "99999");
       }, 500);
-      clicked = showing;
+      clicked2 = showing;
     }
   };
 
-  $: if (clicked) {
+  $: if (clicked2) {
     setTimeout(() => {
       hideBefore = true;
     }, 500);
   } else {
     hideBefore = false;
+    setTimeout(() => {
+      clicked1 = false;
+      const {left, top} = container.getBoundingClientRect();
+      s(root).setProperty("--top", top + window.pageYOffset + "px");
+      s(root).setProperty("--left", left + window.pageXOffset + "px");
+    }, 500);
   }
 </script>
 
@@ -97,20 +105,29 @@
       id="popupButton"
       bind:this={popupButton}
       on:click={() => {
-        clicked = true;
-        showingHiding.set({showing: true, hiding: false});
-        s(root).setProperty("--myzi", "99999");
-        body.style.setProperty("--scrollability", "hidden");
-        body.style.setProperty("--td", ".5s");
+        const {left, top} = container.getBoundingClientRect();
+        s(root).setProperty("--top", top + "px");
+        s(root).setProperty("--left", left + "px");
+        setTimeout(() => {
+          clicked1 = true;
+          setTimeout(() => {
+            clicked2 = true;
+            showingHiding.set({showing: true, hiding: false});
+            s(root).setProperty("--myzi", "99999");
+            body.style.setProperty("--scrollability", "hidden");
+            body.style.setProperty("--td", ".5s");
+          }, 0);
+        }, 0);
+        
       }}
-      class:goCenter={clicked}
-      class:removeBasicThings={clicked}
+      class:goCenter1={clicked1}
+      class:goCenter2={clicked2}
     >
-        <div id="after" class:hideElement1={!clicked}>
+        <div id="after" class:hideElement1={!clicked2}>
           <slot name="after"></slot>
         </div>
 
-        <div id="before" class:hideElement1={clicked} class:hideElement2={hideBefore}>
+        <div id="before" class:hideElement1={clicked2} class:hideElement2={hideBefore}>
           <slot name="before"></slot>
         </div>
     </div>
@@ -161,8 +178,13 @@
         background-color: rgb(244, 244, 244);
         border: 1px solid rgb(204, 204, 204);
 
-        &.goCenter {
+        &.goCenter1 {
           position: fixed;
+          top: var(--top);
+          left: var(--left);
+        }
+
+        &.goCenter2 {
           width: var(--width) !important;
           height: var(--height) !important;
           top: 50%;

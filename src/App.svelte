@@ -1,11 +1,13 @@
 <script lang="ts">
   import JournalList from "./components/JournalList/JournalList.svelte";
+
+  const dates = Array(30).fill("").map((_, i) => i + 1 + "번째 일기");
 </script>
 
 <main>
   <!-- <Background /> -->
   <h1>a Journey to the Journal</h1>
-  <JournalList dates={["3월 11일", "3월 12일"]}></JournalList>
+  <JournalList dates={dates}></JournalList>
 </main>
 
 <style lang="scss">

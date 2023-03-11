@@ -19,7 +19,7 @@
           {date}
         </div>
         <div slot="after">
-          이것은 {date}의 일기입니다
+          hello
         </div>
       </PopupButton>
     {/each}

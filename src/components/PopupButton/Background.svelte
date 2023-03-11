@@ -21,8 +21,8 @@
     class:hideBackground2={hiding}
     on:click={() => {
       showingHiding.set({showing: false, hiding: false});
-      body.style.setProperty("--scrollability", "visible");
       setTimeout(() => {
+        body.style.setProperty("--scrollability", "visible");
         showingHiding.set({showing, hiding: !showing});
         if (hiding) body.style.setProperty("--td", ".0s");
       }, 500);

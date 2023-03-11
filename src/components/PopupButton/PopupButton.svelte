@@ -219,6 +219,7 @@
           cursor: pointer;
 
           &.hideElement2 {
+            display: none;
             visibility: none;
           }
         }

@@ -43,8 +43,13 @@
 
     const {left, top, width, height} = container.getBoundingClientRect();
 
-    s(root).setProperty("--top", top + window.pageYOffset + "px");
-    s(root).setProperty("--left", left + window.pageXOffset + "px");
+    if (clicked2) {
+      s(root).setProperty("--top", top + height / 2 + "px");
+      s(root).setProperty("--left", left + width / 2 + "px");
+    } else {
+      s(root).setProperty("--top", top + window.pageYOffset + "px");
+      s(root).setProperty("--left", left + window.pageXOffset + "px");
+    }
 
     s(root).setProperty("--width", popupWidth);
     s(root).setProperty("--height", popupHeight);
@@ -105,11 +110,11 @@
       id="popupButton"
       bind:this={popupButton}
       on:click={() => {
-        const {left, top} = container.getBoundingClientRect();
-        s(root).setProperty("--top", top + "px");
-        s(root).setProperty("--left", left + "px");
+        const {left, top, width, height} = container.getBoundingClientRect();
+        s(root).setProperty("--top", top + height / 2 + "px");
+        s(root).setProperty("--left", left + width / 2 + "px");
+        clicked1 = true;
         setTimeout(() => {
-          clicked1 = true;
           setTimeout(() => {
             clicked2 = true;
             showingHiding.set({showing: true, hiding: false});
@@ -175,7 +180,7 @@
         left: var(--left);
         transform: translate(0, 0);
 
-        transition-property: top, left, transform, width, height;
+        transition-property: top, left, width, height;
         transition-duration: var(--td);
 
         background-color: rgb(244, 244, 244);
@@ -183,8 +188,7 @@
 
         &.goCenter1 {
           position: fixed;
-          top: var(--top);
-          left: var(--left);
+          transform: translate(-50%, -50%);
         }
 
         &.goCenter2 {
@@ -192,7 +196,6 @@
           height: var(--height) !important;
           top: 50%;
           left: 50%;
-          transform: translate(-50%, -50%);
         }
 
         #after, #before {

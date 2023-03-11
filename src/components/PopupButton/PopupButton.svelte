@@ -37,17 +37,21 @@
   let hideBefore = false;
 
   function designateButtonPosition() {
-    s(container).width = s(popupButton).width = originalWidth;
-    s(container).height = s(popupButton).height = originalHeight;
+    s(root).setProperty("--owidth", originalWidth);
+    s(root).setProperty("--oheight", originalHeight);
 
-    const {top, left} = container.getBoundingClientRect();
-    const {offsetWidth, offsetHeight} = document.documentElement;
+    const {left, top, width, height} = container.getBoundingClientRect();
 
-    s(root).setProperty("--top", top / offsetHeight * 100 + "%");
-    s(root).setProperty("--left", left / offsetWidth * 100 + "%");
+    s(root).setProperty("--top", top + window.pageYOffset + "px");
+    s(root).setProperty("--left", left + window.pageXOffset + "px");
 
     s(root).setProperty("--width", popupWidth);
     s(root).setProperty("--height", popupHeight);
+    
+    s(popupButton).width = width + "px";
+    s(popupButton).height = height + "px";
+
+    setTimeout(designateButtonPosition, 1);
   }
 
   // DOM 렌더링 전
@@ -57,9 +61,7 @@
   });
 
   // DOM 렌더링 후
-  onMount(() => {
-    designateButtonPosition();    
-  });
+  onMount(designateButtonPosition);
 
   // resize 시...
   window.addEventListener("resize", designateButtonPosition);
@@ -89,10 +91,9 @@
     
   <Background></Background>
   {/if}
-  <span id="container" bind:this={container}>
+  <span id="container" class={className} bind:this={container}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
-      class={className}
       id="popupButton"
       bind:this={popupButton}
       on:click={() => {
@@ -121,10 +122,13 @@
     overflow: var(--scrollability);
 
     --td: .0s;
-    --scrollability: scroll;
+    --scrollability: auto;
   }
 
   main {
+    --owidth: auto;
+    --oheight: auto;
+
     --top: auto;
     --left: auto;
 
@@ -136,6 +140,9 @@
 
     #container {
       display: inline-block;
+      
+      width: var(--owidth);
+      height: var(--oheight);
 
       #popupButton {
         margin: 0;
@@ -153,8 +160,6 @@
 
         background-color: rgb(244, 244, 244);
         border: 1px solid rgb(204, 204, 204);
-
-        overflow: hidden;
 
         &.goCenter {
           position: fixed;

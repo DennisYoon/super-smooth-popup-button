@@ -38,19 +38,19 @@
       left: 0;
       width: 100%;
       height: 100%;
-      transition-property: background-color, backdrop-filter;
+      transition-property: background-color, /*backdrop-filter*/;
       transition-duration: .5s;
       z-index: 0;
   
       &.showBackground {
         visibility: visible !important;
-        backdrop-filter: blur(10px);
-        background-color: rgba(0, 0, 0, 0.551) !important;
+        // backdrop-filter: blur(5px);
+        background-color: rgba(0, 0, 0, 0.8) !important;
       }
   
       &.hideBackground1 {
         background-color: rgba(255, 255, 255, 0);
-        backdrop-filter: blur(0px);
+        // backdrop-filter: blur(0px);
   
       }
   

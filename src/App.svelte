@@ -5,7 +5,7 @@
 <main>
   <!-- <Background /> -->
   <h1>a Journey to the Journal</h1>
-  <JournalList></JournalList>
+  <JournalList dates={["3월 11일", "3월 12일"]}></JournalList>
 </main>
 
 <style lang="scss">

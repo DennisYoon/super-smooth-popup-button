@@ -1,10 +1,13 @@
 <script lang="ts">
   import PopupButton from "../PopupButton/PopupButton.svelte";
+
+  //props
+  export let dates: string[];
 </script>
 
 <main>
   <div id="date">
-    {#each Array(1).fill(1).map((v, i) => v + i) as i}
+    {#each dates as date}
       <PopupButton
         originalWidth="auto"
         originalHeight="50px"
@@ -13,13 +16,10 @@
         className="JournalList"
       >
         <div slot="before">
-          {i}
+          {date}
         </div>
         <div slot="after">
-          <h2>
-            DO You Hear the people sing?
-          </h2>
-          <button>hello world</button>
+          이것은 {date}의 일기입니다
         </div>
       </PopupButton>
     {/each}

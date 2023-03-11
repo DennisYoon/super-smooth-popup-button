@@ -116,6 +116,9 @@
             s(root).setProperty("--myzi", "99999");
             body.style.setProperty("--scrollability", "hidden");
             body.style.setProperty("--td", ".5s");
+            setTimeout(() => {
+              body.style.setProperty("--td", "0s");
+            }, 500);
           }, 0);
         }, 0);
         

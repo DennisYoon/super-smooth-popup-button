@@ -118,8 +118,7 @@
 
 <main bind:this={root}>
   {#if backgroundMe}
-    
-  <Background></Background>
+    <Background></Background>
   {/if}
   <span id="container" class={className} bind:this={container}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -184,6 +183,8 @@
 
         background-color: rgb(244, 244, 244);
         border: 1px solid rgb(204, 204, 204);
+
+        overflow: hidden;
 
         &.goCenter1 {
           position: fixed;

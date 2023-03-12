@@ -37,6 +37,7 @@
   let clicked2 = false;
   let hideBefore = false;
 
+  // functions
   function designateButtonPosition() {
     s(root).setProperty("--owidth", originalWidth);
     s(root).setProperty("--oheight", originalHeight);
@@ -56,6 +57,26 @@
     
     s(popupButton).width = width + "px";
     s(popupButton).height = height + "px";
+  }
+
+  function onClick() {
+    const {left, top, width, height} = container.getBoundingClientRect();
+    s(root).setProperty("--top", top + height / 2 + "px");
+    s(root).setProperty("--left", left + width / 2 + "px");
+    clicked1 = true;
+    setTimeout(() => {
+      clicked2 = true;
+      setTimeout(() => {
+        if (clicked2) hideBefore = true;
+      }, 500);
+      showingHiding.set({showing: true, hiding: false});
+      s(root).setProperty("--myzi", "99999");
+      body.style.setProperty("--scrollability", "hidden");
+      body.style.setProperty("--td", ".5s");
+      setTimeout(() => {
+        body.style.setProperty("--td", "0s");
+      }, 500);
+    }, 0);
   }
 
   // DOM 렌더링 전
@@ -84,11 +105,7 @@
     }
   };
 
-  $: if (clicked2) {
-    setTimeout(() => {
-      hideBefore = true;
-    }, 500);
-  } else {
+  $: if (!clicked2) {
     hideBefore = false;
     setTimeout(() => {
       clicked1 = false;
@@ -109,35 +126,17 @@
     <div
       id="popupButton"
       bind:this={popupButton}
-      on:click={() => {
-        const {left, top, width, height} = container.getBoundingClientRect();
-        s(root).setProperty("--top", top + height / 2 + "px");
-        s(root).setProperty("--left", left + width / 2 + "px");
-        clicked1 = true;
-        setTimeout(() => {
-          setTimeout(() => {
-            clicked2 = true;
-            showingHiding.set({showing: true, hiding: false});
-            s(root).setProperty("--myzi", "99999");
-            body.style.setProperty("--scrollability", "hidden");
-            body.style.setProperty("--td", ".5s");
-            setTimeout(() => {
-              body.style.setProperty("--td", "0s");
-            }, 500);
-          }, 0);
-        }, 0);
-        
-      }}
+      on:click={onClick}
       class:goCenter1={clicked1}
       class:goCenter2={clicked2}
     >
-        <div id="after" class:hideElement1={!clicked2}>
-          <slot name="after"></slot>
-        </div>
+      <div id="after" class:hideElement1={!clicked2}>
+        <slot name="after"></slot>
+      </div>
 
-        <div id="before" class:hideElement1={clicked2} class:hideElement2={hideBefore}>
-          <slot name="before"></slot>
-        </div>
+      <div id="before" class:hideElement1={clicked2} class:hideElement2={hideBefore}>
+        <slot name="before"></slot>
+      </div>
     </div>
   </span>
 </main>
@@ -205,6 +204,7 @@
           transition: opacity .5s;
           top: 0;
           left: 0;
+          opacity: 1;
 
           &.hideElement1 {
             opacity: 0;
@@ -219,8 +219,7 @@
           cursor: pointer;
 
           &.hideElement2 {
-            display: none;
-            visibility: none;
+            visibility: hidden;
           }
         }
 

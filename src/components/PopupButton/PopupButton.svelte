@@ -206,6 +206,8 @@
           top: 0;
           left: 0;
           opacity: 1;
+          display: flex;
+          justify-content: center;
 
           &.hideElement1 {
             opacity: 0;
@@ -213,8 +215,6 @@
         }
 
         #before {
-          display: flex;
-          justify-content: center;
           align-items: center;
           user-select: none;
           cursor: pointer;
@@ -225,7 +225,7 @@
         }
 
         #after {
-          width: var(--width);
+          max-width: var(--width);
         }
       }
     }

@@ -1,25 +1,22 @@
 <script lang="ts">
   import PopupButton from "../PopupButton/PopupButton.svelte";
-
-  //props
-  export let dates: string[];
 </script>
 
 <main>
-  <div id="date">
-    {#each dates as date}
+  <div id="examples">
+    {#each Array(30).fill(1).map((v, i) => v + i) as value}
       <PopupButton
         originalWidth="auto"
         originalHeight="50px"
         popupWidth="400px"
         popupHeight="500px"
-        className="JournalList"
+        className="examples"
       >
         <div slot="before">
-          {date}
+          {value}
         </div>
         <div slot="after">
-          hello
+          <h1>hello {value}</h1>
         </div>
       </PopupButton>
     {/each}
@@ -28,12 +25,12 @@
 
 <style lang="scss">
   main {
-    #date {
+    #examples {
       border: 1px solid black;
     }
   }
   
-  :global(.JournalList) {
+  :global(.examples) {
     margin: 10px;
     display: block !important;
   }

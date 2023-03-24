@@ -1,16 +1,11 @@
 <script lang="ts">
-  import JournalList from "./components/JournalList/JournalList.svelte";
-  import DateSelection from "./components/DateSelection/DateSelection.svelte";
-
-  const dates = Array(30).fill("").map((_, i) => i + 1 + "번째 일기");
+  import JournalList from "./components/exs/Examples.svelte";
 </script>
 
 <main>
-  <!-- <Background /> -->
-  <h1>a Journey to the Journal</h1>
-  <DateSelection year="2023" month="3" />
+  <h1>수퍼 스무스 팝업 버튼</h1>
   <div id="emptyBox"></div>
-  <JournalList dates={dates} />
+  <JournalList />
 </main>
 
 <style lang="scss">

@@ -1,2 +1,2 @@
-<p align="center">Super Tiny Private Diary Web Application</p>
-<h1 align="center">📚 A Journey to the Journal</h1>
+# 수펄 스무스 팝업 버튼!
+(원래 일기 web app이었는데 귀찮아서...)
